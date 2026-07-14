@@ -1,21 +1,95 @@
 // rounds/lootcrate.js
 window.Rounds = window.Rounds || {};
 window.Rounds.lootcrate = (function () {
+  const SKIP_COST = 3;
+  const START_COINS = 5;
+  const WAIT_MS = 2600;
+  const RUN_MS = 1600;
+
+  const WALK_FRAME_MS = 150;
+
   function startRound(mountEl, onComplete) {
-    let state = window.LootcrateLogic.createLootState(6);
+    let state = window.LootcrateLogic.createLootState(4);
+    let coins = START_COINS;
+    let walkToggle;
+
     mountEl.innerHTML = `
-      <h2>Loot Crate Clicker</h2>
-      <p>Keys left: <span id="keys-left">${state.keys}</span></p>
-      <button id="open-crate-btn">Open Crate</button>
+      <h2>Loot Crate Run</h2>
+      <p><img class="coin-icon" src="assets/runner/coin.png" alt="">Coins: <span id="coin-count">${coins}</span> &middot; Crates left: <span id="keys-left">${state.keys}</span></p>
+      <div class="runner-scene" id="runner-scene">
+        <div class="parallax-sky parallax-sky1"></div>
+        <div class="parallax-sky parallax-sky2"></div>
+        <div class="ground"></div>
+        <img class="runner-sprite" id="runner" src="assets/runner/bunny-stand.png" alt="">
+        <div class="loot-crate" id="loot-crate" hidden></div>
+      </div>
+      <div id="choice-area"></div>
       <div id="crate-result"></div>
     `;
 
+    const coinEl = mountEl.querySelector('#coin-count');
     const keysEl = mountEl.querySelector('#keys-left');
+    const runnerEl = mountEl.querySelector('#runner');
+    const crateEl = mountEl.querySelector('#loot-crate');
+    const choiceArea = mountEl.querySelector('#choice-area');
     const resultEl = mountEl.querySelector('#crate-result');
-    const btn = mountEl.querySelector('#open-crate-btn');
 
-    btn.addEventListener('click', () => {
-      if (state.keys <= 0) return;
+    function runCycle() {
+      if (state.keys <= 0) {
+        clearInterval(walkToggle);
+        setTimeout(onComplete, 700);
+        return;
+      }
+      choiceArea.innerHTML = '';
+      crateEl.hidden = true;
+      crateEl.classList.remove('crate-drop');
+
+      const targetPct = 52 + Math.random() * 26; // varies each crate so the runner never stops in the same spot
+      const runMs = RUN_MS + Math.round(Math.random() * 500);
+
+      runnerEl.style.transition = 'none';
+      runnerEl.style.left = '0%';
+      runnerEl.src = 'assets/runner/bunny-walk1.png';
+      void runnerEl.offsetWidth;
+      runnerEl.style.transition = `left ${runMs}ms ease-in-out`;
+      runnerEl.style.left = `${targetPct}%`;
+
+      walkToggle = setInterval(() => {
+        runnerEl.src = runnerEl.src.includes('walk1')
+          ? 'assets/runner/bunny-walk2.png'
+          : 'assets/runner/bunny-walk1.png';
+      }, WALK_FRAME_MS);
+
+      setTimeout(() => {
+        clearInterval(walkToggle);
+        runnerEl.src = 'assets/runner/bunny-stand.png';
+        crateEl.style.left = `${Math.min(targetPct + 10, 82)}%`;
+        crateEl.hidden = false;
+        crateEl.classList.add('crate-drop');
+        showChoice();
+      }, runMs);
+    }
+
+    function showChoice() {
+      const canPay = coins >= SKIP_COST;
+      choiceArea.innerHTML = `
+        <button id="continue-btn">Continue</button>
+        <button id="pay-btn" ${canPay ? '' : 'disabled'}>Pay ${SKIP_COST} coins to open</button>
+      `;
+      choiceArea.querySelector('#continue-btn').addEventListener('click', () => {
+        choiceArea.innerHTML = '<p class="wait-msg">Waiting...</p>';
+        setTimeout(openCurrentCrate, WAIT_MS);
+      });
+      choiceArea.querySelector('#pay-btn').addEventListener('click', () => {
+        if (coins < SKIP_COST) return;
+        coins -= SKIP_COST;
+        coinEl.textContent = coins;
+        openCurrentCrate();
+      });
+    }
+
+    function openCurrentCrate() {
+      choiceArea.innerHTML = '';
       state = window.LootcrateLogic.openCrate(state, Math.random);
       keysEl.textContent = state.keys;
       const lastReward = state.opened[state.opened.length - 1];
@@ -25,11 +99,10 @@ window.Rounds.lootcrate = (function () {
       rewardEl.innerHTML = `${icon ? `<span class="icon-sprite ${icon}"></span>` : ''}<span>${lastReward.toUpperCase()}</span>`;
       resultEl.prepend(rewardEl);
 
-      if (state.keys <= 0) {
-        btn.disabled = true;
-        setTimeout(onComplete, 1200);
-      }
-    });
+      setTimeout(runCycle, 600);
+    }
+
+    runCycle();
   }
 
   return { startRound };

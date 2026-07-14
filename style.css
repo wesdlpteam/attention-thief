@@ -179,6 +179,82 @@ body {
 #screen-round button:active { transform: scale(0.94); }
 #screen-round button:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }
 
+.runner-scene {
+  position: relative;
+  height: 130px;
+  overflow: hidden;
+  border-radius: 12px;
+  margin: 16px 0;
+  background: #2a1854;
+}
+.parallax-sky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+}
+.parallax-sky1 { background-image: url('assets/backdrop/sky-layer1.png'); opacity: 0.55; animation: scroll-bg 14s linear infinite; }
+.parallax-sky2 { background-image: url('assets/backdrop/sky-layer2.png'); opacity: 0.8; animation: scroll-bg 8s linear infinite; }
+@keyframes scroll-bg { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+.ground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 26px;
+  background-image: url('assets/backdrop/ground-grass.png');
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  animation: scroll-bg 2.5s linear infinite;
+}
+
+.runner-sprite {
+  position: absolute;
+  bottom: 24px;
+  left: 0;
+  width: 42px;
+  height: auto;
+  filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.4));
+}
+
+.loot-crate {
+  position: absolute;
+  top: -60px;
+  width: 42px;
+  height: 38px;
+  background: linear-gradient(180deg, var(--wes-gold) 0%, #8A6B22 100%);
+  border: 3px solid #5c4718;
+  border-radius: 6px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
+}
+.loot-crate::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #5c4718;
+}
+@keyframes crate-fall {
+  0% { top: -60px; }
+  70% { top: 44px; }
+  85% { top: 34px; }
+  100% { top: 40px; }
+}
+.loot-crate.crate-drop { animation: crate-fall 0.5s cubic-bezier(.34, 1.56, .64, 1) forwards; }
+
+.coin-icon { width: 20px; height: 20px; vertical-align: middle; margin-right: 4px; }
+
+#choice-area { display: flex; gap: 10px; }
+#choice-area button { flex: 1; min-width: 0; padding: 12px 8px; font-size: 0.85rem; }
+#choice-area #pay-btn { background: url('assets/ui/button-yellow.png') center / 100% 100% no-repeat; color: #4a3a00; }
+.wait-msg { opacity: 0.8; font-style: italic; margin: 8px 0; }
+
 .reward {
   display: flex;
   align-items: center;
@@ -204,6 +280,40 @@ body {
 
 #timer-bar { background: rgba(255, 255, 255, 0.15); border-radius: 6px; overflow: hidden; height: 10px; margin: 12px 0; }
 #timer-fill { background: linear-gradient(90deg, var(--arcade-pink), var(--arcade-yellow)); height: 100%; width: 100%; }
+
+.day-strip { display: flex; gap: 6px; margin: 14px 0 4px; }
+.day-strip.shake { animation: day-shake 0.4s ease; }
+@keyframes day-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+.day-tile {
+  flex: 1;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.day-tile.day-lit { background: var(--wes-gold); color: #1B0E3D; transform: scale(1.05); }
+
+.flame-track { position: relative; height: 44px; margin-bottom: 12px; }
+.flame {
+  position: absolute;
+  top: 0;
+  width: 26px;
+  height: 32px;
+  margin-left: -13px;
+  background: radial-gradient(circle at 50% 70%, var(--arcade-yellow) 0%, var(--arcade-pink) 70%, transparent 100%);
+  border-radius: 50% 50% 50% 0;
+  filter: drop-shadow(0 0 8px rgba(255, 46, 136, 0.6));
+}
+.flame.flame-out { background: #555; filter: none; }
 
 .rank-row {
   display: flex;
