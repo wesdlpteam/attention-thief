@@ -7,7 +7,7 @@
 })(typeof window !== 'undefined' ? window : globalThis, function () {
   const REVEALS = {
     lootcrate: {
-      title: 'Loot Box',
+      title: 'Loot Box Mechanic',
       body: "You just experienced a loot box. Random rewards keep your brain guessing — same trick as a slot machine.",
       seenIn: 'Genshin Impact, Fortnite, Roblox item crates',
     },

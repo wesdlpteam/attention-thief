@@ -11,6 +11,7 @@
     <div id="app">
       <header id="progress-header">
         <div class="dots" id="progress-dots"></div>
+        <div class="wallet" id="wallet-display"><img class="coin-icon" src="assets/runner/coin.png" alt="">Coins: <span id="wallet-coins"></span></div>
       </header>
 
       <section id="screen-hub" class="screen">
@@ -36,12 +37,14 @@
       <section id="screen-debrief" class="screen" hidden>
         <h1><span class="icon-sprite icon-trophy icon-tint-purple"></span>Debrief</h1>
         <div id="debrief-list"></div>
+        <button id="play-again-btn">Play Again</button>
       </section>
     </div>
   </div>
 
   <script src="logic/hub-state.js"></script>
   <script src="logic/reveals-data.js"></script>
+  <script src="logic/game-state.js"></script>
   <script src="logic/lootcrate-logic.js"></script>
   <script src="logic/streak-logic.js"></script>
   <script src="logic/leaderboard-logic.js"></script>

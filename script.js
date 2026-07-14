@@ -17,6 +17,22 @@
   };
 
   let hubState = window.HubState.createHubState();
+  let gameState = window.GameState.createGameState();
+
+  const wallet = {
+    getCoins: () => gameState.coins,
+    canAfford: (amount) => window.GameState.canAfford(gameState, amount),
+    spend: (amount) => {
+      if (!window.GameState.canAfford(gameState, amount)) return false;
+      gameState = window.GameState.spendCoins(gameState, amount);
+      renderWallet();
+      return true;
+    },
+    earn: (amount) => {
+      gameState = window.GameState.addCoins(gameState, amount);
+      renderWallet();
+    },
+  };
 
   const screens = {
     hub: document.getElementById('screen-hub'),
@@ -29,6 +45,10 @@
     Object.entries(screens).forEach(([key, el]) => {
       el.hidden = key !== name;
     });
+  }
+
+  function renderWallet() {
+    document.getElementById('wallet-coins').textContent = gameState.coins;
   }
 
   function renderProgressDots() {
@@ -67,6 +87,7 @@
     }
 
     renderProgressDots();
+    renderWallet();
     showScreen('hub');
   }
 
@@ -74,7 +95,7 @@
     const mount = document.getElementById('round-mount');
     mount.innerHTML = '';
     showScreen('round');
-    window.Rounds[roundId].startRound(mount, () => showReveal(roundId));
+    window.Rounds[roundId].startRound(mount, () => showReveal(roundId), wallet);
   }
 
   function showReveal(roundId) {
@@ -88,16 +109,11 @@
 
     hubState = window.HubState.completeRound(hubState, roundId);
     renderProgressDots();
-    const nextRoundId = hubState.order.find((id) => !hubState.completed.includes(id));
 
     const backBtn = document.getElementById('reveal-back-btn');
-    backBtn.textContent = nextRoundId ? 'Continue' : 'See the Debrief';
+    backBtn.textContent = 'Back to FunZone';
     backBtn.onclick = () => {
-      if (nextRoundId) {
-        openRound(nextRoundId);
-      } else {
-        openDebrief();
-      }
+      renderHub();
     };
   }
 
@@ -113,6 +129,12 @@
 
     showScreen('debrief');
   }
+
+  document.getElementById('play-again-btn').addEventListener('click', () => {
+    hubState = window.HubState.createHubState();
+    gameState = window.GameState.createGameState();
+    renderHub();
+  });
 
   renderHub();
 })();
