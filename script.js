@@ -8,6 +8,14 @@
     feed: 'The Feed',
   };
 
+  const ROUND_ICONS = {
+    lootcrate: 'icon-open',
+    streak: 'icon-medal1',
+    leaderboard: 'icon-leaderboard',
+    favourite: 'icon-cart',
+    feed: 'icon-scroll',
+  };
+
   let hubState = window.HubState.createHubState();
 
   const screens = {
@@ -36,9 +44,14 @@
     hubState.order.forEach((roundId) => {
       const tile = document.createElement('button');
       tile.className = 'tile';
-      tile.textContent = ROUND_LABELS[roundId];
       const unlocked = window.HubState.isUnlocked(hubState, roundId);
       const done = hubState.completed.includes(roundId);
+      const badge = !unlocked
+        ? '<span class="tile-state-badge"><span class="icon-sprite icon-locked"></span></span>'
+        : done
+          ? '<span class="tile-state-badge"><span class="icon-sprite icon-check"></span></span>'
+          : '';
+      tile.innerHTML = `${badge}<span class="icon-sprite ${ROUND_ICONS[roundId]}"></span><span>${ROUND_LABELS[roundId]}</span>`;
       tile.disabled = !unlocked;
       if (done) tile.classList.add('tile-done');
       tile.addEventListener('click', () => openRound(roundId));
@@ -48,7 +61,7 @@
     if (window.HubState.allComplete(hubState)) {
       const debriefTile = document.createElement('button');
       debriefTile.className = 'tile tile-debrief';
-      debriefTile.textContent = 'Debrief';
+      debriefTile.innerHTML = '<span class="icon-sprite icon-trophy"></span><span>Debrief</span>';
       debriefTile.addEventListener('click', openDebrief);
       grid.appendChild(debriefTile);
     }
@@ -66,6 +79,8 @@
 
   function showReveal(roundId) {
     const reveal = window.RevealsData.getReveal(roundId);
+    const iconEl = document.querySelector('.reveal-card .reveal-icon');
+    iconEl.innerHTML = `<span class="icon-sprite ${ROUND_ICONS[roundId]} icon-tint-purple"></span>`;
     document.getElementById('reveal-title').textContent = reveal.title;
     document.getElementById('reveal-body').textContent = reveal.body;
     document.getElementById('reveal-seen-in').textContent = `Seen in: ${reveal.seenIn}`;

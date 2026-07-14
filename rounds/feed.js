@@ -4,7 +4,7 @@ window.Rounds.feed = (function () {
   function startRound(mountEl, onComplete) {
     mountEl.innerHTML = `
       <h2>The Feed</h2>
-      <div id="feed-card"></div>
+      <div id="feed-card" class="feed-card"></div>
       <button id="feed-done-btn">I've seen enough</button>
     `;
 

@@ -21,7 +21,8 @@ window.Rounds.lootcrate = (function () {
       const lastReward = state.opened[state.opened.length - 1];
       const rewardEl = document.createElement('div');
       rewardEl.className = `reward reward-${lastReward}`;
-      rewardEl.textContent = lastReward.toUpperCase();
+      const icon = lastReward === 'legendary' ? 'icon-star' : lastReward === 'rare' ? 'icon-medal2' : '';
+      rewardEl.innerHTML = `${icon ? `<span class="icon-sprite ${icon}"></span>` : ''}<span>${lastReward.toUpperCase()}</span>`;
       resultEl.prepend(rewardEl);
 
       if (state.keys <= 0) {

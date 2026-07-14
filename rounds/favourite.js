@@ -5,7 +5,7 @@ window.Rounds.favourite = (function () {
     mountEl.innerHTML = `
       <h2>My Favourite</h2>
       <p>Pick your favourite!</p>
-      <div id="mascot-grid"></div>
+      <div id="mascot-grid" class="mascot-grid"></div>
       <div id="offer" hidden></div>
     `;
 
@@ -16,7 +16,7 @@ window.Rounds.favourite = (function () {
       const card = document.createElement('button');
       card.className = 'mascot-card';
       card.style.setProperty('--mascot-color', mascot.color);
-      card.innerHTML = `<h3>${mascot.name}</h3><p>${mascot.personality}</p>`;
+      card.innerHTML = `<img class="mascot-avatar" src="assets/emotes/${mascot.id}.png" alt=""><h3>${mascot.name}</h3><p>${mascot.personality}</p>`;
       card.addEventListener('click', () => {
         grid.querySelectorAll('.mascot-card').forEach((c) => c.classList.remove('selected'));
         card.classList.add('selected');
