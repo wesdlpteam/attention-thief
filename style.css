@@ -17,6 +17,7 @@
 
 * { box-sizing: border-box; }
 
+html { font-size: 17px; }
 html, body { height: 100%; }
 
 body {
@@ -28,16 +29,38 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 24px 12px;
+  padding: 32px 12px;
+}
+
+.phone-frame {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  padding: 16px 14px 30px;
+  background: #17101f;
+  border-radius: 48px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), 0 0 0 2px rgba(255, 255, 255, 0.06) inset;
+}
+.phone-frame::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 96px;
+  height: 22px;
+  background: #17101f;
+  border-radius: 12px;
+  z-index: 20;
 }
 
 #app {
+  position: relative;
   width: 100%;
-  max-width: 440px;
   background: var(--wes-neutral-100);
-  border-radius: 24px;
+  border-radius: 32px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), 0 2px 0 rgba(255, 255, 255, 0.4) inset;
+  box-shadow: 0 2px 0 rgba(255, 255, 255, 0.4) inset;
 }
 
 .screen { padding: 24px; }
