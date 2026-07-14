@@ -35,10 +35,10 @@ body {
 .phone-frame {
   position: relative;
   width: 100%;
-  max-width: 480px;
-  padding: 16px 14px 30px;
+  max-width: 560px;
+  padding: 50px 18px 34px;
   background: #17101f;
-  border-radius: 48px;
+  border-radius: 52px;
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), 0 0 0 2px rgba(255, 255, 255, 0.06) inset;
 }
 .phone-frame::before {
@@ -63,7 +63,7 @@ body {
   box-shadow: 0 2px 0 rgba(255, 255, 255, 0.4) inset;
 }
 
-.screen { padding: 24px; }
+.screen { padding: 26px; }
 .screen[hidden] { display: none; }
 
 /* Icon sprites, sliced from a single Kenney "Game Icons" (CC0) sheet */

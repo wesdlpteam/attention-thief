@@ -111,9 +111,6 @@
       list.appendChild(item);
     });
 
-    const questions = document.getElementById('debrief-questions');
-    questions.innerHTML = `<h2>Discuss as a class</h2><ul>${window.RevealsData.DISCUSSION_QUESTIONS.map((q) => `<li>${q}</li>`).join('')}</ul>`;
-
     showScreen('debrief');
   }
 
