@@ -8,14 +8,24 @@ window.Rounds.lootcrate = (function () {
 
   const WALK_FRAME_MS = 150;
 
+  const COIN_PACKS = [
+    { amount: 10, price: '$0.99', best: false },
+    { amount: 50, price: '$3.99', best: true },
+  ];
+
   function startRound(mountEl, onComplete) {
-    let state = window.LootcrateLogic.createLootState(4);
+    let state = window.LootcrateLogic.createLootState(2);
     let coins = START_COINS;
     let walkToggle;
+    let shownBuyPrompt = false;
 
     mountEl.innerHTML = `
       <h2>Loot Crate Run</h2>
-      <p><img class="coin-icon" src="assets/runner/coin.png" alt="">Coins: <span id="coin-count">${coins}</span> &middot; Crates left: <span id="keys-left">${state.keys}</span></p>
+      <p>
+        <img class="coin-icon" src="assets/runner/coin.png" alt="">Coins: <span id="coin-count">${coins}</span>
+        &middot; Crates left: <span id="keys-left">${state.keys}</span>
+        <button id="buy-coins-btn" class="buy-coins-btn">+ Buy Coins</button>
+      </p>
       <div class="runner-scene" id="runner-scene">
         <div class="parallax-sky parallax-sky1"></div>
         <div class="parallax-sky parallax-sky2"></div>
@@ -25,6 +35,22 @@ window.Rounds.lootcrate = (function () {
       </div>
       <div id="choice-area"></div>
       <div id="crate-result"></div>
+      <div class="iap-modal" id="iap-modal" hidden>
+        <div class="iap-card">
+          <h3>Need more coins?</h3>
+          <div class="iap-options">
+            ${COIN_PACKS.map((pack) => `
+              <button class="iap-option ${pack.best ? 'iap-best' : ''}" data-amount="${pack.amount}">
+                ${pack.best ? '<span class="iap-badge">BEST VALUE</span>' : ''}
+                <img class="coin-icon" src="assets/runner/coin.png" alt="">
+                <span>${pack.amount} Coins</span>
+                <span class="iap-price">${pack.price}</span>
+              </button>
+            `).join('')}
+          </div>
+          <button id="iap-close">No thanks</button>
+        </div>
+      </div>
     `;
 
     const coinEl = mountEl.querySelector('#coin-count');
@@ -33,6 +59,24 @@ window.Rounds.lootcrate = (function () {
     const crateEl = mountEl.querySelector('#loot-crate');
     const choiceArea = mountEl.querySelector('#choice-area');
     const resultEl = mountEl.querySelector('#crate-result');
+    const iapModal = mountEl.querySelector('#iap-modal');
+
+    function openIapModal() {
+      iapModal.hidden = false;
+    }
+
+    mountEl.querySelector('#buy-coins-btn').addEventListener('click', openIapModal);
+    mountEl.querySelector('#iap-close').addEventListener('click', () => {
+      iapModal.hidden = true;
+    });
+    mountEl.querySelectorAll('.iap-option').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        coins += Number(btn.dataset.amount);
+        coinEl.textContent = coins;
+        iapModal.hidden = true;
+        showChoice();
+      });
+    });
 
     function runCycle() {
       if (state.keys <= 0) {
@@ -86,6 +130,11 @@ window.Rounds.lootcrate = (function () {
         coinEl.textContent = coins;
         openCurrentCrate();
       });
+
+      if (!canPay && !shownBuyPrompt) {
+        shownBuyPrompt = true;
+        openIapModal();
+      }
     }
 
     function openCurrentCrate() {

@@ -86,10 +86,18 @@
     document.getElementById('reveal-seen-in').textContent = `Seen in: ${reveal.seenIn}`;
     showScreen('reveal');
 
+    hubState = window.HubState.completeRound(hubState, roundId);
+    renderProgressDots();
+    const nextRoundId = hubState.order.find((id) => !hubState.completed.includes(id));
+
     const backBtn = document.getElementById('reveal-back-btn');
+    backBtn.textContent = nextRoundId ? 'Continue' : 'See the Debrief';
     backBtn.onclick = () => {
-      hubState = window.HubState.completeRound(hubState, roundId);
-      renderHub();
+      if (nextRoundId) {
+        openRound(nextRoundId);
+      } else {
+        openDebrief();
+      }
     };
   }
 

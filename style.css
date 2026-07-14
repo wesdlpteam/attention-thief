@@ -255,6 +255,81 @@ body {
 #choice-area #pay-btn { background: url('assets/ui/button-yellow.png') center / 100% 100% no-repeat; color: #4a3a00; }
 .wait-msg { opacity: 0.8; font-style: italic; margin: 8px 0; }
 
+.buy-coins-btn {
+  background: var(--arcade-yellow);
+  color: #4a3a00;
+  border: none;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 6px;
+  filter: none;
+}
+
+.iap-modal {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: 16px;
+}
+.iap-modal[hidden] { display: none; }
+.iap-card {
+  background: #fff;
+  color: #222;
+  border-radius: 16px;
+  padding: 20px;
+  width: 85%;
+  text-align: center;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+.iap-card h3 { margin: 0 0 14px; color: var(--wes-purple); }
+.iap-options { display: flex; flex-direction: column; gap: 14px; margin-bottom: 14px; }
+#screen-round button.iap-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--wes-neutral-100);
+  color: #222;
+  border: 2px solid var(--wes-neutral-300);
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  filter: none;
+  min-width: 0;
+}
+#screen-round button.iap-option.iap-best { border-color: var(--wes-gold); background: #FFF6E0; }
+.iap-badge {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--wes-gold);
+  color: #4a3a00;
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.iap-price { margin-left: auto; color: var(--wes-purple); }
+#screen-round button#iap-close {
+  background: none;
+  color: #888;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+  filter: none;
+  padding: 4px;
+  min-width: 0;
+}
+
 .reward {
   display: flex;
   align-items: center;
