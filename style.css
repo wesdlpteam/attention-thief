@@ -35,8 +35,9 @@ body {
 .phone-frame {
   position: relative;
   width: 100%;
-  max-width: 560px;
-  padding: 50px 18px 34px;
+  max-width: 400px;
+  aspect-ratio: 9 / 19.5;
+  padding: 50px 16px 30px;
   background: #17101f;
   border-radius: 52px;
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55), 0 0 0 2px rgba(255, 255, 255, 0.06) inset;
@@ -57,13 +58,17 @@ body {
 #app {
   position: relative;
   width: 100%;
+  height: 100%;
   background: var(--wes-neutral-100);
   border-radius: 32px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   box-shadow: 0 2px 0 rgba(255, 255, 255, 0.4) inset;
 }
 
-.screen { padding: 26px; }
+#progress-header { flex-shrink: 0; }
+.screen { padding: 26px; flex: 1 1 auto; overflow-y: auto; }
 .screen[hidden] { display: none; }
 
 /* Icon sprites, sliced from a single Kenney "Game Icons" (CC0) sheet */
