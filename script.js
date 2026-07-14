@@ -1,0 +1,98 @@
+// script.js
+(function () {
+  const ROUND_LABELS = {
+    lootcrate: 'Loot Crate Clicker',
+    streak: 'Streak Runner',
+    leaderboard: 'Top Rank',
+    favourite: 'My Favourite',
+    feed: 'The Feed',
+  };
+
+  let hubState = window.HubState.createHubState();
+
+  const screens = {
+    hub: document.getElementById('screen-hub'),
+    round: document.getElementById('screen-round'),
+    reveal: document.getElementById('screen-reveal'),
+    debrief: document.getElementById('screen-debrief'),
+  };
+
+  function showScreen(name) {
+    Object.entries(screens).forEach(([key, el]) => {
+      el.hidden = key !== name;
+    });
+  }
+
+  function renderProgressDots() {
+    const dotsEl = document.getElementById('progress-dots');
+    dotsEl.innerHTML = hubState.order
+      .map((id) => `<span class="dot ${hubState.completed.includes(id) ? 'dot-done' : ''}"></span>`)
+      .join('');
+  }
+
+  function renderHub() {
+    const grid = document.getElementById('tile-grid');
+    grid.innerHTML = '';
+    hubState.order.forEach((roundId) => {
+      const tile = document.createElement('button');
+      tile.className = 'tile';
+      tile.textContent = ROUND_LABELS[roundId];
+      const unlocked = window.HubState.isUnlocked(hubState, roundId);
+      const done = hubState.completed.includes(roundId);
+      tile.disabled = !unlocked;
+      if (done) tile.classList.add('tile-done');
+      tile.addEventListener('click', () => openRound(roundId));
+      grid.appendChild(tile);
+    });
+
+    if (window.HubState.allComplete(hubState)) {
+      const debriefTile = document.createElement('button');
+      debriefTile.className = 'tile tile-debrief';
+      debriefTile.textContent = 'Debrief';
+      debriefTile.addEventListener('click', openDebrief);
+      grid.appendChild(debriefTile);
+    }
+
+    renderProgressDots();
+    showScreen('hub');
+  }
+
+  function openRound(roundId) {
+    const mount = document.getElementById('round-mount');
+    mount.innerHTML = '';
+    showScreen('round');
+    window.Rounds[roundId].startRound(mount, () => showReveal(roundId));
+  }
+
+  function showReveal(roundId) {
+    const reveal = window.RevealsData.getReveal(roundId);
+    document.getElementById('reveal-title').textContent = reveal.title;
+    document.getElementById('reveal-body').textContent = reveal.body;
+    document.getElementById('reveal-seen-in').textContent = `Seen in: ${reveal.seenIn}`;
+    showScreen('reveal');
+
+    const backBtn = document.getElementById('reveal-back-btn');
+    backBtn.onclick = () => {
+      hubState = window.HubState.completeRound(hubState, roundId);
+      renderHub();
+    };
+  }
+
+  function openDebrief() {
+    const list = document.getElementById('debrief-list');
+    list.innerHTML = '';
+    window.RevealsData.getDebriefList(hubState.order).forEach((entry) => {
+      const item = document.createElement('div');
+      item.className = 'debrief-item';
+      item.innerHTML = `<h3>${entry.title}</h3><p>${entry.body}</p>`;
+      list.appendChild(item);
+    });
+
+    const questions = document.getElementById('debrief-questions');
+    questions.innerHTML = `<h2>Discuss as a class</h2><ul>${window.RevealsData.DISCUSSION_QUESTIONS.map((q) => `<li>${q}</li>`).join('')}</ul>`;
+
+    showScreen('debrief');
+  }
+
+  renderHub();
+})();

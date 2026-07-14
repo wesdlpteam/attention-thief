@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FunZone</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header id="progress-header">
+      <div class="dots" id="progress-dots"></div>
+    </header>
+
+    <section id="screen-hub" class="screen">
+      <h1>FunZone</h1>
+      <div class="tile-grid" id="tile-grid"></div>
+    </section>
+
+    <section id="screen-round" class="screen" hidden>
+      <div id="round-mount"></div>
+    </section>
+
+    <section id="screen-reveal" class="screen" hidden>
+      <div class="reveal-card">
+        <h2 id="reveal-title"></h2>
+        <p id="reveal-body"></p>
+        <p id="reveal-seen-in"></p>
+        <button id="reveal-back-btn">Back to FunZone</button>
+      </div>
+    </section>
+
+    <section id="screen-debrief" class="screen" hidden>
+      <h1>Debrief</h1>
+      <div id="debrief-list"></div>
+      <div id="debrief-questions"></div>
+    </section>
+  </div>
+
+  <script src="logic/hub-state.js"></script>
+  <script src="logic/reveals-data.js"></script>
+  <script src="logic/lootcrate-logic.js"></script>
+  <script src="logic/streak-logic.js"></script>
+  <script src="logic/leaderboard-logic.js"></script>
+  <script src="logic/favourite-logic.js"></script>
+  <script src="logic/feed-logic.js"></script>
+  <script src="rounds/lootcrate.js"></script>
+  <script src="rounds/streak.js"></script>
+  <script src="rounds/leaderboard.js"></script>
+  <script src="rounds/favourite.js"></script>
+  <script src="rounds/feed.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
