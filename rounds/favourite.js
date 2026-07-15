@@ -13,8 +13,42 @@ window.Rounds.favourite = (function () {
     { id: 'castle', name: 'Castle', cost: 12, bg: 'linear-gradient(180deg, #DFAB57 0%, #4F2759 100%)' },
   ];
 
+  const BUY_MORE_AMOUNT = 5;
+  const BUY_MORE_PRICE = '$0.99';
+
+  function iapModalMarkup() {
+    return `
+      <div class="iap-modal" id="iap-modal" hidden>
+        <div class="iap-card">
+          <h3>Need more coins?</h3>
+          <div class="iap-options">
+            <button class="iap-option" id="iap-buy-btn">
+              <img class="coin-icon" src="assets/runner/coin.png" alt="">
+              <span>${BUY_MORE_AMOUNT} Coins</span>
+              <span class="iap-price">${BUY_MORE_PRICE}</span>
+            </button>
+          </div>
+          <button id="iap-close">No thanks</button>
+        </div>
+      </div>
+    `;
+  }
+
   function startRound(mountEl, onComplete, wallet) {
     showSplash();
+
+    function wireIapModal(onBought) {
+      const modal = mountEl.querySelector('#iap-modal');
+      modal.querySelector('#iap-buy-btn').addEventListener('click', () => {
+        wallet.earn(BUY_MORE_AMOUNT);
+        modal.hidden = true;
+        onBought();
+      });
+      modal.querySelector('#iap-close').addEventListener('click', () => {
+        modal.hidden = true;
+      });
+      return modal;
+    }
 
     function showSplash() {
       mountEl.innerHTML = `
@@ -61,12 +95,17 @@ window.Rounds.favourite = (function () {
         <div id="costume-grid" class="costume-grid"></div>
         <p id="fund-msg" class="wait-msg"></p>
         <button id="confirm-costume-btn" disabled>Confirm Costume</button>
+        ${iapModalMarkup()}
       `;
       const previewImg = mountEl.querySelector('#preview-img');
       const costumeGrid = mountEl.querySelector('#costume-grid');
       const confirmBtn = mountEl.querySelector('#confirm-costume-btn');
       const fundMsg = mountEl.querySelector('#fund-msg');
       let selectedCostume = null;
+
+      const iapModal = wireIapModal(() => {
+        fundMsg.textContent = 'Got 5 more coins! Try again.';
+      });
 
       COSTUMES.forEach((costume) => {
         const card = document.createElement('button');
@@ -86,6 +125,7 @@ window.Rounds.favourite = (function () {
       confirmBtn.addEventListener('click', () => {
         if (selectedCostume.cost > 0 && !wallet.spend(selectedCostume.cost)) {
           fundMsg.textContent = 'Not enough coins for that costume!';
+          iapModal.hidden = false;
           return;
         }
         showHomes(mascot, selectedCostume);
@@ -98,11 +138,16 @@ window.Rounds.favourite = (function () {
         <div id="home-grid" class="home-grid"></div>
         <p id="fund-msg" class="wait-msg"></p>
         <button id="confirm-home-btn" disabled>Confirm Home</button>
+        ${iapModalMarkup()}
       `;
       const homeGrid = mountEl.querySelector('#home-grid');
       const confirmBtn = mountEl.querySelector('#confirm-home-btn');
       const fundMsg = mountEl.querySelector('#fund-msg');
       let selectedHome = null;
+
+      const iapModal = wireIapModal(() => {
+        fundMsg.textContent = 'Got 5 more coins! Try again.';
+      });
 
       HOMES.forEach((home) => {
         const card = document.createElement('button');
@@ -122,6 +167,7 @@ window.Rounds.favourite = (function () {
       confirmBtn.addEventListener('click', () => {
         if (!wallet.spend(selectedHome.cost)) {
           fundMsg.textContent = 'Not enough coins for that home!';
+          iapModal.hidden = false;
           return;
         }
         showFinalConfirm(mascot, costume, selectedHome);
