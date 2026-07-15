@@ -6,7 +6,7 @@
     root.GameState = factory();
   }
 })(typeof window !== 'undefined' ? window : globalThis, function () {
-  const START_COINS = 20;
+  const START_COINS = 10;
 
   function createGameState() {
     return { coins: START_COINS };

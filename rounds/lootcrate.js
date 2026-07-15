@@ -11,8 +11,7 @@ window.Rounds.lootcrate = (function () {
   const SPIN_TIERS = ['common', 'rare', 'legendary'];
 
   const COIN_PACKS = [
-    { amount: 10, price: '$0.99', best: false },
-    { amount: 50, price: '$3.99', best: true },
+    { amount: 5, price: '$0.99', best: false },
   ];
 
   function startRound(mountEl, onComplete, wallet) {
