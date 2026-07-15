@@ -14,7 +14,18 @@ window.Rounds.favourite = (function () {
   ];
 
   function startRound(mountEl, onComplete, wallet) {
-    showMascotPick();
+    showSplash();
+
+    function showSplash() {
+      mountEl.innerHTML = `
+        <div class="splash-screen">
+          <h2>My Favourite</h2>
+          <p>Pick a favourite character, dress them up, and buy them a home!</p>
+          <button id="start-btn">Start</button>
+        </div>
+      `;
+      mountEl.querySelector('#start-btn').addEventListener('click', showMascotPick);
+    }
 
     function showMascotPick() {
       mountEl.innerHTML = `

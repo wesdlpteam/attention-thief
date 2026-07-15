@@ -228,6 +228,17 @@ body {
 #screen-round button:active { transform: scale(0.94); }
 #screen-round button:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }
 
+.splash-screen { text-align: center; padding: 20px 0; }
+.splash-screen p { line-height: 1.5; margin: 12px 0 20px; }
+#screen-round button#start-btn { background: url('assets/ui/button-green.png') center / 100% 100% no-repeat; }
+
+@keyframes stuck-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+.runner-sprite.runner-stuck { animation: stuck-shake 0.3s ease-in-out infinite; }
+
 .runner-scene {
   position: relative;
   height: 130px;
@@ -339,21 +350,21 @@ body {
 #choice-area #pay-btn { background: url('assets/ui/button-yellow.png') center / 100% 100% no-repeat; color: #4a3a00; }
 .wait-msg { opacity: 0.8; font-style: italic; margin: 8px 0; }
 
-.countdown {
-  width: 44px;
-  height: 44px;
-  margin: 8px auto;
-  border-radius: 50%;
+.countdown-big {
+  width: 94%;
+  height: 64px;
+  margin: 4px auto 16px;
+  border-radius: 16px;
   border: 3px solid var(--arcade-blue);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 2.2rem;
+  font-weight: 800;
   color: var(--arcade-blue);
   transition: color 0.2s ease, border-color 0.2s ease;
 }
-.countdown.countdown-urgent { border-color: var(--arcade-pink); color: var(--arcade-pink); animation: countdown-pulse 0.5s ease-in-out infinite; }
+.countdown-big.countdown-urgent { border-color: var(--arcade-pink); color: var(--arcade-pink); animation: countdown-pulse 0.5s ease-in-out infinite; }
 @keyframes countdown-pulse {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.12); }
@@ -496,6 +507,28 @@ body {
 
 #status-msg.status-live { color: var(--arcade-yellow); font-weight: 700; font-size: 1.1rem; }
 
+.ladder {
+  width: 60px;
+  height: 140px;
+  margin: 12px auto;
+  position: relative;
+  border-left: 6px solid var(--wes-gold);
+  border-right: 6px solid var(--wes-gold);
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+.ladder-rung { height: 6px; background: var(--wes-gold); border-radius: 3px; }
+
+#screen-round button.tap-btn-big {
+  background: url('assets/ui/button-blue.png') center / 100% 100% no-repeat;
+  font-size: 1.3rem;
+  padding: 20px 30px;
+  min-width: 180px;
+}
+
 .rank-row {
   display: flex;
   justify-content: space-between;
@@ -591,8 +624,26 @@ body {
 .feed-caption { font-size: 1.2rem; font-weight: 700; margin: 0 0 8px; }
 .feed-likes { color: var(--arcade-yellow); margin: 0; font-weight: 600; }
 
+.feed-title { text-align: center; }
 .feed-actions { display: flex; gap: 10px; margin-top: 12px; }
 .feed-actions button { flex: 1; min-width: 0; }
+#screen-round button.like-btn { background: #fff; color: #E83534; filter: none; }
+
+.feed-close-x {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 28px;
+  height: 28px;
+  min-width: 0;
+  padding: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 0.9rem;
+  line-height: 1;
+  filter: none;
+}
 
 @keyframes heart-pop {
   0% { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
