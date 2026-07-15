@@ -332,10 +332,16 @@ body {
 }
 @keyframes runner-jump-arc {
   0% { transform: translateY(0); }
-  40% { transform: translateY(-30px); }
+  40% { transform: translateY(-58px); }
   100% { transform: translateY(0); }
 }
-.runner-sprite.runner-jump { animation: runner-jump-arc 0.4s ease-out; }
+.runner-sprite.runner-jump { animation: runner-jump-arc 0.45s ease-out; }
+
+@keyframes reward-spin-blur {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+.reward.reward-spinning { animation: reward-spin-blur 0.09s linear infinite; }
 @keyframes runner-bump-shake {
   0%, 100% { transform: translateX(0) rotate(0); }
   30% { transform: translateX(-4px) rotate(-8deg); }
@@ -523,6 +529,8 @@ body {
 .ladder-rung { height: 6px; background: var(--wes-gold); border-radius: 3px; }
 
 #screen-round button.tap-btn-big {
+  display: block;
+  margin: 20px auto;
   background: url('assets/ui/button-blue.png') center / 100% 100% no-repeat;
   font-size: 1.3rem;
   padding: 20px 30px;
@@ -624,15 +632,16 @@ body {
 .feed-caption { font-size: 1.2rem; font-weight: 700; margin: 0 0 8px; }
 .feed-likes { color: var(--arcade-yellow); margin: 0; font-weight: 600; }
 
-.feed-title { text-align: center; }
+.feed-header-row { position: relative; display: flex; align-items: center; justify-content: center; }
+.feed-title { text-align: center; margin: 0; }
 .feed-actions { display: flex; gap: 10px; margin-top: 12px; }
 .feed-actions button { flex: 1; min-width: 0; }
 #screen-round button.like-btn { background: #fff; color: #E83534; filter: none; }
 
-.feed-close-x {
+#screen-round button.feed-close-x {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 0;
+  right: 0;
   width: 28px;
   height: 28px;
   min-width: 0;

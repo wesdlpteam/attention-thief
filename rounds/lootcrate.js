@@ -5,6 +5,10 @@ window.Rounds.lootcrate = (function () {
   const WAIT_MS = 2600;
   const SEGMENT_MS = 1300;
   const WALK_FRAME_MS = 150;
+  const RUNNER_STOP_OFFSET = 8;
+  const SPIN_MS = 900;
+  const SPIN_TICK_MS = 90;
+  const SPIN_TIERS = ['common', 'rare', 'legendary'];
 
   const COIN_PACKS = [
     { amount: 10, price: '$0.99', best: false },
@@ -131,13 +135,14 @@ window.Rounds.lootcrate = (function () {
 
       function approachObstacle(index, total) {
         jumped = false;
-        const segPct = (index / (total + 1)) * 70 + 8;
-        obstacleEl.style.left = `${segPct}%`;
+        const obstaclePct = (index / (total + 1)) * 70 + 8;
+        const runnerStopPct = Math.max(obstaclePct - RUNNER_STOP_OFFSET, 0);
+        obstacleEl.style.left = `${obstaclePct}%`;
         obstacleEl.hidden = false;
 
         runnerEl.classList.remove('runner-stuck');
         runnerEl.style.transition = `left ${SEGMENT_MS}ms ease-in-out`;
-        runnerEl.style.left = `${segPct}%`;
+        runnerEl.style.left = `${runnerStopPct}%`;
         startWalk();
 
         stopListeningForJump();
@@ -158,12 +163,12 @@ window.Rounds.lootcrate = (function () {
             if (index < total) {
               approachObstacle(index + 1, total);
             } else {
-              runToCrate(segPct);
+              runToCrate(runnerStopPct);
             }
             return;
           }
 
-          // Missed it — the bunny gets stuck at the rock until the player jumps.
+          // Missed it — the bunny gets stuck beside the rock until the player jumps.
           runnerEl.classList.add('runner-stuck');
           stopListeningForJump();
           const unstickHandler = (e) => {
@@ -178,7 +183,7 @@ window.Rounds.lootcrate = (function () {
               if (index < total) {
                 approachObstacle(index + 1, total);
               } else {
-                runToCrate(segPct);
+                runToCrate(runnerStopPct);
               }
             }
           };
@@ -221,19 +226,37 @@ window.Rounds.lootcrate = (function () {
         }
       }
 
+      function rewardMarkup(tier) {
+        const icon = tier === 'legendary' ? 'icon-star' : tier === 'rare' ? 'icon-medal2' : '';
+        return `${icon ? `<span class="icon-sprite ${icon}"></span>` : ''}<span>${tier.toUpperCase()} LOOT</span>`;
+      }
+
       function openCurrentCrate() {
         choiceArea.innerHTML = '';
         state = window.LootcrateLogic.openCrate(state, Math.random);
         keysEl.textContent = state.keys;
         const lastReward = state.opened[state.opened.length - 1];
-        const rewardEl = document.createElement('div');
-        rewardEl.className = `reward reward-${lastReward}`;
-        const icon = lastReward === 'legendary' ? 'icon-star' : lastReward === 'rare' ? 'icon-medal2' : '';
-        rewardEl.innerHTML = `${icon ? `<span class="icon-sprite ${icon}"></span>` : ''}<span>${lastReward.toUpperCase()} LOOT</span>`;
-        resultEl.prepend(rewardEl);
-        crateAttempt += 1;
 
-        setTimeout(runCrateSequence, 600);
+        const rewardEl = document.createElement('div');
+        rewardEl.className = 'reward reward-common reward-spinning';
+        rewardEl.innerHTML = rewardMarkup('common');
+        resultEl.prepend(rewardEl);
+
+        let spinIndex = 0;
+        const spinInterval = setInterval(() => {
+          spinIndex += 1;
+          const tier = SPIN_TIERS[spinIndex % SPIN_TIERS.length];
+          rewardEl.className = `reward reward-${tier} reward-spinning`;
+          rewardEl.innerHTML = rewardMarkup(tier);
+        }, SPIN_TICK_MS);
+
+        setTimeout(() => {
+          clearInterval(spinInterval);
+          rewardEl.className = `reward reward-${lastReward}`;
+          rewardEl.innerHTML = rewardMarkup(lastReward);
+          crateAttempt += 1;
+          setTimeout(runCrateSequence, 600);
+        }, SPIN_MS);
       }
 
       runCrateSequence();

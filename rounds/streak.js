@@ -4,7 +4,7 @@ window.Rounds.streak = (function () {
   const FORCE_BREAK_DAY = 3;
   const BREAK_DELAY_MS = 700;
   const RESULT_HOLD_MS = 1200;
-  const COUNTDOWN_START = 5;
+  const COUNTDOWN_START = 3;
   const RESTORE_COST = 2;
 
   function startRound(mountEl, onComplete, wallet) {

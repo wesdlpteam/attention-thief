@@ -7,9 +7,11 @@ window.Rounds.leaderboard = (function () {
   const REST_MS = 1500;
   const TICK_MS = 100;
 
+  const BOT_NAMES = { 'Bot 1': 'John', 'Bot 2': 'Paul', 'Bot 3': 'George', 'Bot 4': 'Ringo' };
+
   function startRound(mountEl, onComplete, wallet) {
     let playerScore = 0;
-    let botScores = [3, 5, 4];
+    let botScores = [3, 5, 4, 2];
     let sprintIndex = 0;
 
     showSplash();
@@ -43,7 +45,7 @@ window.Rounds.leaderboard = (function () {
       function render() {
         const standings = window.LeaderboardLogic.computeStandings(playerScore, botScores);
         standingsEl.innerHTML = standings
-          .map((e) => `<div class="rank-row ${e.isPlayer ? 'rank-player' : ''}">#${e.rank} ${e.name} — ${e.score}</div>`)
+          .map((e) => `<div class="rank-row ${e.isPlayer ? 'rank-player' : ''}">#${e.rank} ${BOT_NAMES[e.name] || e.name} — ${e.score}</div>`)
           .join('');
       }
 

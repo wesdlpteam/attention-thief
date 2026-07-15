@@ -26,22 +26,23 @@ window.Rounds.feed = (function () {
 
     function beginFeed() {
       mountEl.innerHTML = `
-        <h2 class="feed-title">The Feed</h2>
-        <div id="feed-card" class="feed-card">
+        <div class="feed-header-row">
+          <h2 class="feed-title">The Feed</h2>
           <button id="close-x" class="feed-close-x" hidden>✕</button>
         </div>
+        <div id="feed-card" class="feed-card"></div>
         <div id="feed-actions" class="feed-actions"></div>
       `;
 
       const cardEl = mountEl.querySelector('#feed-card');
       const actionsEl = mountEl.querySelector('#feed-actions');
-      let xVisible = false;
+      const closeXBtn = mountEl.querySelector('#close-x');
+      closeXBtn.addEventListener('click', () => endFeed(true));
 
       function renderCard() {
         const item = window.FeedLogic.nextFeedItem(index, Math.random);
         index += 1;
-        cardEl.innerHTML = `<button id="close-x" class="feed-close-x" ${xVisible ? '' : 'hidden'}>✕</button><p class="feed-caption">${item.caption}</p><p class="feed-likes">${item.likes} likes</p>`;
-        mountEl.querySelector('#close-x').addEventListener('click', () => endFeed(true));
+        cardEl.innerHTML = `<p class="feed-caption">${item.caption}</p><p class="feed-likes">${item.likes} likes</p>`;
       }
 
       function burstHeart() {
@@ -70,6 +71,7 @@ window.Rounds.feed = (function () {
       function endFeed(userStopped) {
         clearTimeout(xTimer);
         clearTimeout(cutTimer);
+        closeXBtn.hidden = true;
         actionsEl.innerHTML = '';
         cardEl.innerHTML = userStopped
           ? '<p class="feed-caption">You stopped the scroll!</p>'
@@ -79,9 +81,7 @@ window.Rounds.feed = (function () {
       }
 
       xTimer = setTimeout(() => {
-        xVisible = true;
-        const xBtn = mountEl.querySelector('#close-x');
-        if (xBtn) xBtn.hidden = false;
+        closeXBtn.hidden = false;
       }, X_APPEAR_MS);
       cutTimer = setTimeout(() => endFeed(false), AUTO_CUT_MS);
 
